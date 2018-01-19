@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--如果scope是prototype,那么每次都new一个新的-->
+    <bean id="car" class="com.wang.spring.model.Car" scope="prototype"> <!--属性注入和构造函数注入比较，如果构造函数注入有循环依赖，可以改成属性注入的方式-->
+        <property name="maxSpeed"><value>300</value></property>
+        <property name="brand"><value>红旗</value></property>
+        <property name="price"><value>200000</value></property>
+    </bean>
+    <bean id="caralt" class="com.wang.spring.model.CarAlt"><!--如果有多个重载的构造函数，可能要index和type联合出马才能确定属性-->
+        <constructor-arg index="0" type="java.lang.String" value="红旗哦 看空格"/>
+        <constructor-arg index="1" type="float" value="300000"/>
+    </bean>
+    <bean id="boss" class="com.wang.spring.model.Boss">
+        <property name="car" ref="car"/>
+    </bean>
+    <bean id="boss1" class="com.wang.spring.model.Boss">
+        <property name="favorites">
+            <list>
+                <value>看报</value>
+                <value>赛车</value>
+                <value>高尔夫</value>
+            </list>
+        </property>
+    </bean>
+    <!--自动扫描注解-->  <!--@Autowired默认按类型匹配-->
+    <context:component-scan base-package="com.wang.spring"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+     p:location="classpath:config.properities"
+     p:fileEncoding="UTF-8"/>
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="url" value="${db.url}"/>
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1800000"/>
+    </bean>
+    <bean id="myTransactionManager" class="com.wang.spring.advice.MyTransactionManager"/>
+    <bean id="forumService" class="com.wang.spring.advice.ForumService"/>
+    <bean id="forumServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean"
+    p:interceptorNames="myTransactionManager"
+    p:target-ref="forumService"
+    p:proxyTargetClass="true"/> <!--被代理的是类，用CGLib代理-->
+    <aop:aspectj-autoproxy/><!--扫描aspect注解,自动创建代理-->
+    <bean id="waiter" class="com.wang.spring.advice.NativeWaiter"/>
+    <bean class="com.wang.spring.aspectj.aspectj.PreGreetingAspect"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+     p:dataSource-ref="dataSource"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/> <!--对注解了@Transactional的bean进行特殊处理，最好是在业务类上使用注解，而不是接口上使用此注解-->
+</beans>
