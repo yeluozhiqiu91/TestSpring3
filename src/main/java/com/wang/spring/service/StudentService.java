@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface StudentService {
     List<Student> findAllStudent();
+    void addStudent(Student student);
+    void updateStudent(Student student);
 }

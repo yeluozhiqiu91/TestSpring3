@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface StudentDao {
     List<Student> findAllStudent();
+    void addStudent(Student student);
+    void updateStudent(Student student);
 }

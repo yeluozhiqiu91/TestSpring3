@@ -32,4 +32,17 @@ public class UserController {
         }
         return sb.toString();
     }
+
+    @RequestMapping("/addStudent")
+    @ResponseBody
+    public String addStudent(Student student){
+        try{
+            studentService.addStudent(student);
+            return "增加成功";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "增加失败";
+        }
+
+    }
 }
