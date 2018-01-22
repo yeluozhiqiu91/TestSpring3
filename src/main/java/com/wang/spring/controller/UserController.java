@@ -3,11 +3,13 @@ package com.wang.spring.controller;
 import com.wang.spring.model.Student;
 import com.wang.spring.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by wang on 2018/1/19.
@@ -17,6 +19,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @RequestMapping("/register")
     public String register(){
         return "register";
@@ -44,5 +48,12 @@ public class UserController {
             return "增加失败";
         }
 
+    }
+    @RequestMapping("/testRedis")
+    @ResponseBody
+    public String testRedis(){
+        redisTemplate.opsForValue().set("hello","world",100, TimeUnit.SECONDS);
+        String value= (String) redisTemplate.opsForValue().get("hello");
+        return value;
     }
 }

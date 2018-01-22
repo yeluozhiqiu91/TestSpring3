@@ -2,3 +2,17 @@ db.url=jdbc:mysql://127.0.0.1:3306/example?characterEncoding=utf-8
 db.driver=com.mysql.jdbc.Driver
 db.username=root
 db.password=mysqladmin
+
+# Redis settings
+redis.host=127.0.0.1
+redis.port=6379
+redis.password=myredisadmin
+redis.timeout=1000
+redis.database=0
+redis.maxActive=100
+redis.maxIdle=100
+redis.minIdle=10
+redis.maxWait=100
+redis.testOnBorrow=true
+redis.testOnReturn=true
+redis.testWhileIdle=true

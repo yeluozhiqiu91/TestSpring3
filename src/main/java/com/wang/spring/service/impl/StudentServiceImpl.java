@@ -22,7 +22,7 @@ public class StudentServiceImpl implements StudentService{
 
     @Transactional
     public void addStudent(Student student) {
-        //有了@Transactional这个注解，抛运行时异常后自动回滚了，没有这个注解的话，数据依然会添加
+        //有了@Transactional这个注解，默认抛运行时异常后自动回滚了，没有这个注解的话，数据依然会添加
         //addstudent之后并不会立即插入数据库，但是数据库的id会加1，不抛异常才会插入数据库
         studentDao.addStudent(student);
         /*throw new RuntimeException();*/
