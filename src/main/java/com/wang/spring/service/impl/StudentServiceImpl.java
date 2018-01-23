@@ -4,9 +4,12 @@ import com.wang.spring.dao.StudentDao;
 import com.wang.spring.model.Student;
 import com.wang.spring.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -16,6 +19,8 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService{
     @Autowired
     private StudentDao studentDao;
+    @Autowired
+    RedisTemplate redisTemplate;
     public List<Student> findAllStudent() {
         return studentDao.findAllStudent();
     }
@@ -30,5 +35,15 @@ public class StudentServiceImpl implements StudentService{
 
     public void updateStudent(Student student) {
         studentDao.updateStudent(student);
+    }
+
+    @PostConstruct
+    public void storeStudent(){
+        List<Student> studentList=findAllStudent();
+        ListOperations<String,List> listOperations=redisTemplate.opsForList();
+        //redisTemplate.boundListOps("studentList").set(10000,studentList);
+        //listOperations.leftPush("studentList",studentList);
+        redisTemplate.boundHashOps("student").put("studentList",studentList);
+        System.out.println("============store student size:"+studentList.size());
     }
 }

@@ -3,6 +3,7 @@ package com.wang.spring.controller;
 import com.wang.spring.model.Student;
 import com.wang.spring.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +56,18 @@ public class UserController {
         redisTemplate.opsForValue().set("hello","world",100, TimeUnit.SECONDS);
         String value= (String) redisTemplate.opsForValue().get("hello");
         return value;
+    }
+
+    @RequestMapping("/testRedis2")
+    @ResponseBody
+    public String testRedis2(){
+        ListOperations<String,List> listOperations=redisTemplate.opsForList();
+        //List<Student> studentList=listOperations.leftPop("studentList");
+        List<Student> studentList= (List<Student>) redisTemplate.boundHashOps("student").get("studentList");
+        StringBuffer sb=new StringBuffer();
+        for(Student s:studentList){
+            sb.append(s.toString());
+        }
+        return sb.toString();
     }
 }
