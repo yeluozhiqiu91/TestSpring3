@@ -26,7 +26,7 @@ public class UserController {
         return "register";
     }
 
-    @RequestMapping(value = "/findAllStudents",produces = "application/json;charset=utf-8")
+    @RequestMapping(value = "/findAllStudents")
     @ResponseBody
     public String findAllStudents(){
         List<Student> students=studentService.findAllStudent();
