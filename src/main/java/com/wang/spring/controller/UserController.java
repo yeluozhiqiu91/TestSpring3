@@ -24,7 +24,7 @@ public class UserController {
     private RedisTemplate redisTemplate;
     @RequestMapping("/register")
     public String register(){
-        return "register";
+        return "registerPage";
     }
 
     @RequestMapping(value = "/findAllStudents")

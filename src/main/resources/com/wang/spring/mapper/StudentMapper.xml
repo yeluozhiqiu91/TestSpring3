@@ -7,10 +7,4 @@
     <select id="findAllStudent" resultType="com.wang.spring.model.Student">
         select * from student
     </select>
-    <select id="addStudent" parameterType="com.wang.spring.model.Student">
-        INSERT INTO student(name,age) VALUES (#{name},#{age})
-    </select>
-    <update id="updateStudent" parameterType="com.wang.spring.model.Student">
-        UPDATE student set name=#{name},age=#{age} where id=#{id}
-    </update>
 </mapper>

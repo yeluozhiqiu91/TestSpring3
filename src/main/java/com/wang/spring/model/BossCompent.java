@@ -46,7 +46,7 @@ public class BossCompent {
         System.out.println("construct...");
     }
 
-    @PostConstruct
+    /*@PostConstruct
     private void init1(){
         System.out.println("execute in init1...");
     }
@@ -64,5 +64,5 @@ public class BossCompent {
     @PreDestroy
     private void destory2(){
         System.out.println("execute in destory2...");
-    }
+    }*/
 }
